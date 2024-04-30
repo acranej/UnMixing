@@ -1,3 +1,7 @@
 
-class Distribution(object):
-    type = 'Gaussian'
+class Distribution:
+    type: str
+    mu: float
+    sigma: float
+
+    
