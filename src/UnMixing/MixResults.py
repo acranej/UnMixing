@@ -53,7 +53,7 @@ def plot_MixResults(self):
                                         self.target_mle['MLE'][0], 
                                         self.target_mle['MLE'][1]) + self.w.values[0]*norm.pdf(np.linspace(1,10,1000), self.mu, self.sigma),  color='black', label='combined')
     plt.legend()
-    plt.figure()
+    #plt.figure()
     plt.show()
     
 
