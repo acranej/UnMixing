@@ -31,7 +31,7 @@ class Distribution_make:
 
 def TruncNormal(x: list[float]):
     print("Making turncated normal distribution...")
-    lower = 6
+    lower = 5
     upper = 8
     temp = [i for i in x if lower <= i <= upper]
     mu_trunc = np.mean(temp)
