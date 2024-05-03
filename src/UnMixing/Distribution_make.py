@@ -36,7 +36,9 @@ def TruncNormal(x: list[float]):
     temp = [i for i in x if lower <= i <= upper]
     mu_trunc = np.mean(temp)
     sigma_trunc = np.std(temp)
+
     mle_res = pd.DataFrame({'MLE':trunc_norm_fit(np.array(temp), lower, upper), 'True':pd.Series(dict(mu=mu, sigma=sigma))}) 
+
     dist_temp = Distribution_make(type = 'Truncated_Normal',
                                   values = temp,
                                   mu= mu_trunc,
@@ -62,22 +64,18 @@ def f(x, mu, sigma, a, b):
 def neg_log_likelihood(params, X, size_cutoff_low, size_cutoff_high):
     """returns negative log-likelihood of ln_tumors given a truncated normal distribution.
 
-From https://en.wikipedia.org/wiki/Truncated_normal_distribution, the pdf f(x; mu, sigma, a, b) is
+    From https://en.wikipedia.org/wiki/Truncated_normal_distribution, the pdf f(x; mu, sigma, a, b) is
     f(x; mu, sigma, a, b) = \frac{1}{sigma} phi_x/[Phi_b - Phi_a]
-
     Where: 
         phi_x = \phi((x - mu)/sigma)
         PHI_y = \Phi((y - mu)/sigma)
-
     Note: 
         PHI_b -> 1, as b -> inf (our case)
-    
     Thus:
         log_f = log(phi_x) - (log(sigma) + log(1 - PHI_a)),
             where
         ln_phi_x = log(phi_x) = -0.5*\eta**2 - log(sqrt(2*pi))
-        """
-        
+        """   
     mu, sigma = params
     return -(np.log(f(X, mu, sigma, size_cutoff_low, size_cutoff_high)).sum())
 
@@ -85,12 +83,12 @@ def trunc_norm_fit(ln_tumors, size_cutoff_low, size_cutoff_high, min_mean=0):
     """trunc_norm_fit(ln(tumor_sizes), ln(size_cutoff), ln(min_mean)) 
     
     returns MLE of [mu, sigma] for best-fitting Gaussian Distribution w/ tumor size cutoff `size_cutoff`. 
-""" 
+    """ 
     from scipy.optimize import minimize
     
     max_mean = ln_tumors.mean()
     std_min = ln_tumors.std()
-    std_max = max_mean - min_mean + std_min     # Need some ad hoc bound; hard to imagine std greater than this
+    std_max = max_mean - min_mean + std_min 
 
     bounds = np.array([[min_mean, max_mean], [std_min, std_max]])
     res = minimize(neg_log_likelihood, 

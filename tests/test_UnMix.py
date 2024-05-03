@@ -14,7 +14,7 @@ class TestUnMix(unittest.TestCase):
         a_dist = Distribution_make.TruncNormal(a)
         b_dist = Distribution_make.TruncNormal(b)
         res = UnMix.UnMix(a_dist, b_dist)
-        print(res)
+        
         MixResults.plot_MixResults(res)
 
 

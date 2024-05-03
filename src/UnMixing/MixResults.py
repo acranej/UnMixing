@@ -6,9 +6,9 @@ import numpy as np
 from scipy.stats import norm
 @dataclass
 class MixResults:
-    w: list[float]
-    mu: list[float]
-    sigma: list[float]
+    w: float
+    mu: float
+    sigma: float
     target_vals: list[float]
     target_mle: pd.DataFrame
     inert_vals: list[float]
@@ -33,20 +33,28 @@ class MixResults:
         val_sigma = df_sigma["sigma"].mean()
         return val_sigma
     
-    def plot_MixResults(self):
-        plt.subplot(1,2,0)
-        plt.hist(self.inert_vals, density=True, bins=30, color="black")
-        plt.axvline(x = self.target_mle['MLE'][0], color = 'b', label='pyMC')
-        plt.plot(np.linspace(1,10,1000), norm.pdf(np.linspace(1,10,1000), self.target_mle['MLE'][0], self.target_mle['MLE'][1]), color='b')
+def plot_MixResults(self):
+    print(self.mu.values)
+    print(self.sigma.values)
+    print(self.w.values)
+    plt.subplot(1,2,1)
+    plt.hist(self.inert_vals, density=True, bins=30, color="black")
+    plt.axvline(x = self.target_mle['MLE'][0], color = 'b', label='pyMC')
+    plt.plot(np.linspace(1,10,1000), norm.pdf(np.linspace(1,10,1000), self.target_mle['MLE'][0], self.target_mle['MLE'][1]), color='b')
 
-        plt.subplot(1,2,1)
-        plt.hist(self.target_vals, density=True, bins=30, color="black", alpha=0.50)
-        plt.plot(np.linspace(1,10,1000), (1-self.w.values[0])*norm.pdf(np.linspace(1,10,1000), self.target_mle['MLE'][0], self.target_mle['MLE'][1]), color='b', label='KT')
-        plt.plot(np.linspace(1,10,1000), self.w.values[0]*norm.pdf(np.linspace(1,10,1000), self.mu, self.sigma), color='red')
-        plt.plot(np.linspace(1,10,1000), (1-self.w.values[0])*norm.pdf(np.linspace(1,10,1000), self.target_mle['MLE'][0], self.target_mle['MLE'][1]) + self.w.values[0]*norm.pdf(np.linspace(1,10,1000), self.mu, self.sigma),  color='black', label='combined')
-        plt.legend()
-        plt.figure()
-        
+    plt.subplot(1,2,2)
+    plt.hist(self.target_vals, density=True, bins=30, color="black", alpha=0.50)
+    plt.plot(np.linspace(1,10,1000), 
+             (1-self.w.values)*norm.pdf(np.linspace(1,10,1000), 
+                                        self.target_mle['MLE'][0], self.target_mle['MLE'][1]), color='b', label='KT')
+    plt.plot(np.linspace(1,10,1000), self.w.values*norm.pdf(np.linspace(1,10,1000), self.mu, self.sigma), color='red')
+    plt.plot(np.linspace(1,10,1000), 
+             (1-self.w.values)*norm.pdf(np.linspace(1,10,1000), 
+                                        self.target_mle['MLE'][0], 
+                                        self.target_mle['MLE'][1]) + self.w.values*norm.pdf(np.linspace(1,10,1000), self.mu, self.sigma),  color='black', label='combined')
+    plt.legend()
+    plt.figure()
+    
 
     
     
