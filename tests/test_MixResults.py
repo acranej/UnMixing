@@ -19,5 +19,10 @@ class TestMixResults(unittest.TestCase):
     def test_sigma(self):
          self.assertAlmostEqual(obj.meanSigma, 1.5, places = 10)
 
+    def test_plot(self):
+        res_temp = MixResults.MixResults(w=7.13982473,
+                                         mu=0.51505243,
+                                         sigma=[0.49270536, 0.50729464])
+
 if __name__ == '__main__':
     unittest.main()
