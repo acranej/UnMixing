@@ -29,18 +29,23 @@ class Distribution_make:
         print("        Lower_cut: ", self.lower_cutoff)
         
 
-def TruncNormal(x: list[float]):
+def TruncNormal(x: list[float], target: bool):
     print("Making turncated normal distribution...")
     lower = 1
     upper = 10
     temp = [i for i in x if lower <= i <= upper]
     mu_trunc = np.mean(temp)
     sigma_trunc = np.std(temp)
-    print("Making MLE...")
-    mle_res = pd.DataFrame({'MLE':trunc_norm_fit(np.array(temp), lower, upper), 'True':pd.Series(dict(mu=mu, sigma=sigma))}) 
+
+    ### the MLE is built off the inert data, not needed for the target
+    if target:
+        mle_res = pd.DataFrame()
+    else:
+        print("Making MLE...")
+        mle_res = pd.DataFrame({'MLE':trunc_norm_fit(np.array(temp), lower, upper), 'True':pd.Series(dict(mu=mu, sigma=sigma))}) 
 
     dist_temp = Distribution_make(type = 'Truncated_Normal',
-                                  values = temp,
+                                  values = x, # values = temp
                                   mu= mu_trunc,
                                   sigma = sigma_trunc,
                                   mle = mle_res,
