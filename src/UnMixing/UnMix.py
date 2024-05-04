@@ -34,7 +34,7 @@ def UnMix(dist1, dist2):
                               w=w,
                               comp_dists=[dist1_temp,dist2_temp],
                               observed=dist1.values)
-            #model.debug()
+            print("Verbose Model Debug:\n" + str(model.debug()))
         with model:
             idata=pm.sample(draws=1000, tune=1000, target_accept=0.95)
 
