@@ -36,7 +36,7 @@ def TruncNormal(x: list[float]):
     temp = [i for i in x if lower <= i <= upper]
     mu_trunc = np.mean(temp)
     sigma_trunc = np.std(temp)
-
+    print("Making MLE...")
     mle_res = pd.DataFrame({'MLE':trunc_norm_fit(np.array(temp), lower, upper), 'True':pd.Series(dict(mu=mu, sigma=sigma))}) 
 
     dist_temp = Distribution_make(type = 'Truncated_Normal',
@@ -51,17 +51,17 @@ def TruncNormal(x: list[float]):
 
 #### MLE functions #####
 @np.vectorize
-def _phi(eta): 
+def _phi(eta): ### Calculates the standard normal density function (PDF)
     return np.exp(-0.5*eta**2)/np.sqrt(2*np.pi)
 
-def _Phi(x): 
+def _Phi(x): ###Calculates the cumulative distribution function (CDF) of the standard normal distribution
     return 0.5*(1 + scipy.special.erf(x/np.sqrt(2)))
 
 @np.vectorize
-def f(x, mu, sigma, a, b):
+def f(x, mu, sigma, a, b): ### Calculates the truncated normal PDF for a given set of parameters
     return _phi((x - mu)/sigma)/(sigma*(_Phi((b-mu)/sigma) - _Phi((a-mu)/sigma)))
 
-def neg_log_likelihood(params, X, size_cutoff_low, size_cutoff_high):
+def neg_log_likelihood(params, X, size_cutoff_low, size_cutoff_high): ### Calculates the negative log-likelihood for given parameters
     """returns negative log-likelihood of ln_tumors given a truncated normal distribution.
 
     From https://en.wikipedia.org/wiki/Truncated_normal_distribution, the pdf f(x; mu, sigma, a, b) is
@@ -79,6 +79,7 @@ def neg_log_likelihood(params, X, size_cutoff_low, size_cutoff_high):
     mu, sigma = params
     return -(np.log(f(X, mu, sigma, size_cutoff_low, size_cutoff_high)).sum())
 
+### function to find the MLE of mean (mu) and standard deviation (sigma) for the truncated normal distribution given the input values and bounds
 def trunc_norm_fit(ln_tumors, size_cutoff_low, size_cutoff_high, min_mean=0):
     """trunc_norm_fit(ln(tumor_sizes), ln(size_cutoff), ln(min_mean)) 
     
