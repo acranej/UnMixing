@@ -39,21 +39,20 @@ def plot_MixResults(self):
     print(self.w.values)
     plt.subplot(1,2,1)
     plt.hist(self.inert_vals, density=True, bins=30, color="black")
-    plt.axvline(x = self.target_mle['MLE'][0], color = 'b', label='pyMC')
-    plt.plot(np.linspace(1,10,1000), norm.pdf(np.linspace(1,10,1000), self.target_mle['MLE'][0], self.target_mle['MLE'][1]), color='b')
+    plt.axvline(x = self.target_mle['MLE'].iloc[0], color = 'b', label='pyMC')
+    plt.plot(np.linspace(1,10,1000), norm.pdf(np.linspace(1,10,1000), self.target_mle['MLE'].iloc[0], self.target_mle['MLE'].iloc[1]), color='b')
 
     plt.subplot(1,2,2)
     plt.hist(self.target_vals, density=True, bins=30, color="black", alpha=0.50)
     plt.plot(np.linspace(1,10,1000), 
              (1-self.w.values[0])*norm.pdf(np.linspace(1,10,1000), 
-                                        self.target_mle['MLE'][0], self.target_mle['MLE'][1]), color='b', label='Dist1')
+                                        self.target_mle['MLE'].iloc[0], self.target_mle['MLE'].iloc[1]), color='b', label='Dist1')
     plt.plot(np.linspace(1,10,1000), self.w.values[0]*norm.pdf(np.linspace(1,10,1000), self.mu, self.sigma), color='red', label = 'Dist2')
     plt.plot(np.linspace(1,10,1000), 
              (1-self.w.values[0])*norm.pdf(np.linspace(1,10,1000), 
-                                        self.target_mle['MLE'][0], 
-                                        self.target_mle['MLE'][1]) + self.w.values[0]*norm.pdf(np.linspace(1,10,1000), self.mu, self.sigma),  color='black', label='combined')
+                                        self.target_mle['MLE'].iloc[0], 
+                                        self.target_mle['MLE'].iloc[1]) + self.w.values[0]*norm.pdf(np.linspace(1,10,1000), self.mu, self.sigma),  color='black', label='combined')
     plt.legend()
-    #plt.figure()
     plt.show()
     
 

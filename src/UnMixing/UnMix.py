@@ -2,16 +2,21 @@ import numpy as np
 import pymc as pm
 import multiprocessing 
 import sys
+import warnings
+# Suppress FutureWarning related to pandas Series, will be changed to polars in time {todo} change to polars...
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 sys.path.append('/Users/alexander_crane/Desktop/Research/UnMixing/')
 from src.UnMixing import MixResults, Distribution_make
 
 # multiprocessing.set_start_method('fork')
 
+# dist 1 needs to be the targets and dist 2 needs to be the MLE of the inerts
 def UnMix(dist1, dist2):
     print("UnMixing...")
-    if dist1.type and dist2.type == "Truncated_Normal":
+    if dist1.type == "Truncated_Normal":
         with pm.Model() as model:
-            w = pm.Dirichlet("w", a=np.array([1, 1]))
+            w = pm.Dirichlet("w", a=np.array([10, 10]))
             mu1 = pm.Normal("mu1", mu=dist1.mu, sigma=dist1.sigma)
             sig1 = pm.HalfNormal("sig1", sigma=dist1.sigma)
 
@@ -21,8 +26,8 @@ def UnMix(dist1, dist2):
                                                  upper=dist1.upper_cutoff)
             
             
-            dist2_temp = pm.TruncatedNormal.dist(mu=dist2.mle['MLE'][0],
-                                                 sigma=dist2.mle['MLE'][1],
+            dist2_temp = pm.TruncatedNormal.dist(mu=dist2.mle['MLE'].iloc[0],
+                                                 sigma=dist2.mle['MLE'].iloc[1],
                                                  lower=dist2.lower_cutoff,
                                                  upper=dist2.upper_cutoff)
             like = pm.Mixture(name="like",
@@ -31,7 +36,7 @@ def UnMix(dist1, dist2):
                               observed=dist1.values)
             #model.debug()
         with model:
-            idata=pm.sample(draws=1000, tune=1000, target_accept=0.95, cores = 1)
+            idata=pm.sample(draws=1000, tune=1000, target_accept=0.95)
 
         mu_temp = idata.posterior["mu1"].mean(("chain", "draw"))
         sig_temp = idata.posterior["sig1"].mean(("chain", "draw"))
