@@ -45,7 +45,7 @@ def TruncNormal(x: list[float], target: bool):
         mle_res = pd.DataFrame({'MLE':trunc_norm_fit(np.array(temp), lower, upper), 'True':pd.Series(dict(mu=mu, sigma=sigma))}) 
 
     dist_temp = Distribution_make(type = 'Truncated_Normal',
-                                  values = x, # values = temp
+                                  values = temp, # values = x
                                   mu= mu_trunc,
                                   sigma = sigma_trunc,
                                   mle = mle_res,
