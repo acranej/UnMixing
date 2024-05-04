@@ -14,7 +14,7 @@ from src.UnMixing import MixResults, Distribution_make
 # dist 1 needs to be the targets and dist 2 needs to be the MLE of the inerts
 def UnMix(dist1, dist2):
     print("UnMixing...")
-    if dist1.type == "Truncated_Normal":
+    if dist1.type and dist2.type == "Truncated_Normal":
         with pm.Model() as model:
             w = pm.Dirichlet("w", a=np.array([10, 10]))
             mu1 = pm.Normal("mu1", mu=dist1.mu, sigma=dist1.sigma)
