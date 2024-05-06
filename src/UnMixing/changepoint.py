@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 #from pymc_experimental.marginal_model import MarginalModel
 #https://gist.github.com/ricardoV94/f986686ce86511b293c5dd6be374e51d
 
+
 # Define the Bayesian model
 @dataclass
 class ChangePoint():

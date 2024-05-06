@@ -3,7 +3,7 @@ import numpy as np
 import sys
 import pymc as pm
 sys.path.append('/Users/alexander_crane/Desktop/Research/UnMixing/')
-from src.UnMixing import changepoint
+from UnMixing import Changepoint
 
 rng = np.random.default_rng()
 class TestChangepoint(unittest.TestCase):
@@ -15,7 +15,7 @@ class TestChangepoint(unittest.TestCase):
        # g_dist = pm.Normal.dist('gaussian', mu=np.mean(data), sigma=np.std(data), observed=data)
         #p_dist = pm.Pareto.dist('pareto', alpha=2, m=np.min(data), observed=data)
 
-        res = changepoint.ChangePoint(data = data)
+        res = Changepoint.ChangePoint(data = data)
         res.sample()
         res.plot_changepoint()
 
