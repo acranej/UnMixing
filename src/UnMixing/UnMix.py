@@ -38,6 +38,7 @@ def UnMix(dist1, dist2):
             print("Verbose Model Debug:\n" + str(model.debug()))
         with model:
             idata=pm.sample(draws=1000, tune=1000, target_accept=0.95)
+            ppc = pm.sample_posterior_predictive(idata, extend_inferencedata=True)
         #pm.model_to_graphviz(model)
         #az.plot_posterior(idata) # gives HDI which is a log scale distribution
         #az.plot_forest(idata, var_names= ['mu','sigma'])
@@ -53,7 +54,8 @@ def UnMix(dist1, dist2):
         # az. summary(idata) --> get a summary table of r_hat (Potential Scale reduction, should be all close to 1)
         print("Generating results...")
         res = MixResults.MixResults(w = w_temp, mu = mu_temp, sigma= sig_temp, target_vals = dist1.values, 
-                                    target_mle = dist1.mle, inert_vals = dist2.values, inert_mle = dist2.mle)
+                                    target_mle = dist1.mle, inert_vals = dist2.values, inert_mle = dist2.mle,
+                                    model = model, trace = idata)
 
     return res
 
